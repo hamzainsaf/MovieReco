@@ -4,29 +4,26 @@ import difflib
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+# Reading Data
 movies_data = pd.read_csv('movies.csv')
-# print(movies_data.head())
-
+# Selecting feature/columns
 select_features = ['genres', 'keywords', 'tagline', 'cast', 'director']
-
+# Fixing empty spaces
 for feature in select_features:
     movies_data[feature] = movies_data[feature].fillna('')
 
+# combining the features
 combined_features = movies_data['genres'] + ' ' + movies_data['keywords'] + ' ' + movies_data['tagline'] + ' ' + \
                     movies_data['cast'] + ' ' + movies_data['director']
-# print(combined_features)
-
+# vectoring/giving numerical values to the data
 vectorizer = TfidfVectorizer()
 feature_vectors = vectorizer.fit_transform(combined_features)
-# print(feature_vectors)
 
-
+# Cosine similarity
 similarity = cosine_similarity(feature_vectors)
 
-# print(similarity.shape)
 list_of_movies = movies_data['title'].to_list()
 list_of_movies_g = movies_data['genres'].to_list()
-list_of_movies_c = movies_data['cast'].to_list()
 list_of_movies_d = movies_data['director'].to_list()
 
 
@@ -54,8 +51,7 @@ menu_press = 10
 while menu_press != 0:
     string_input = input('1 for movie by name \n'
                          '2 for movie by genre \n'
-                         '3 for movie by cast \n'
-                         '4 for movie by director\n'
+                         '3 for movie by director\n'
                          '0 for Quit\n'
                          )
 
@@ -66,19 +62,12 @@ while menu_press != 0:
         input1 = input('Enter your Favourite movie \n')
         check(c_name, input1, list_of_movies)
 
-
     elif menu_press == 2:
         c_name = 'genres'
         input1 = input('Enter the Genre \n')
         check(c_name, input1, list_of_movies_g)
 
-
     elif menu_press == 3:
-        c_name = 'cast'
-        input1 = input('Enter the Cast\n')
-        check(c_name, input1, list_of_movies_c)
-
-    elif menu_press == 4:
         c_name = 'director'
         input1 = input('Enter name of the Director\n')
         check(c_name, input1, list_of_movies_d)
